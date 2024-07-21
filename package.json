@@ -1,7 +1,7 @@
 {
   "name": "mortgage-calculator",
   "version": "0.1.0",
-  "homepage": "https://olafchuszno.github.io/react-gh-pages",
+  "homepage": "https://olafchuszno.github.io/mortgage-calculator",
   "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
