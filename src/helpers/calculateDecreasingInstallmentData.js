@@ -15,13 +15,13 @@ export const calculateDecreasingInstallmentData = (
 
     const interest = Math.ceil(data[i - 1][5] * monthlyInterest * 100) / 100;
 
-    let installment = capital + interest;
+    let installment = Math.round((capital + interest) * 100) / 100;
 
     let finalValue = Math.round((startValue - capital) * 100) / 100;
 
-    if (i === totalInstallments) {
-      installment += finalValue;
-      capital += finalValue;
+    if (capital > startValue) {
+      capital = startValue;
+      installment = Math.round((capital + interest) * 100) / 100;
       finalValue = 0;
     }
 

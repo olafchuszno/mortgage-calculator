@@ -1,9 +1,10 @@
 import "./App.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { useMemo, useState } from "react";
 import { InstallmentsTable } from "./components/InstallmentsTable.jsx";
 import { calculateFixedInstallmentData } from "./helpers/calculateFixedInstallmentData";
 import { calculateDecreasingInstallmentData } from "./helpers/calculateDecreasingInstallmentData";
+import { numberWithCommas } from "./helpers/numberWithCommas.js";
 
 type InstallmentType = "fixed" | "decreasing";
 
@@ -13,6 +14,7 @@ function App() {
   const [totalAmount, setTotalAmount] = useState(500000);
   const [installmentType, setInstallmentType] =
     useState<InstallmentType>("fixed");
+  // const [totalInterest, setTotalInterest] = useState<number>();
 
   const monthlyInterest = useMemo(() => interest / 12, [interest]);
 
@@ -30,9 +32,8 @@ function App() {
     [singleInstallmentAmount]
   );
 
-  const roundedCapitalInEachInstallment = useMemo(() => {
-    return Math.ceil((totalAmount / totalInstallments) * 100) / 100;
-  }, []);
+  const roundedCapitalInEachInstallment =
+    Math.ceil((totalAmount / totalInstallments) * 100) / 100;
 
   const headers = [
     "Numer raty",
@@ -64,6 +65,17 @@ function App() {
           monthlyInterest
         );
 
+  const totalInterest = useMemo(
+    () =>
+      Math.round(
+        data.reduce(
+          (accu, currentInstallment) => accu + currentInstallment[3],
+          0
+        ) * 100
+      ) / 100,
+    []
+  );
+
   return (
     <div className="App">
       <header style={{ marginBottom: "-160px" }} className="App-header">
@@ -79,13 +91,14 @@ function App() {
               event.preventDefault();
               setInstallmentType(event.target.value as InstallmentType);
             }}
-            value={totalAmount}
+            value={installmentType}
             name="interest"
           >
             <option value="fixed">Stała</option>
             <option value="decreasing">Malejąca</option>
           </select>
         </div>
+
         <div style={{ marginBottom: "50px" }}>
           <label htmlFor="totalAmount">Kwota kredytu (zł)</label>
           <input
@@ -138,8 +151,18 @@ function App() {
       )}
 
       {installmentType === "decreasing" && (
-        <h2>Część kapiatłu w racie: {roundedInstallment} zł</h2>
+        <h2>
+          Część kapiatłu w racie: {numberWithCommas(roundedInstallment)} zł
+        </h2>
       )}
+
+      <h2>
+        Łączna suma zapłaconych odsetek: {numberWithCommas(totalInterest)} zł
+      </h2>
+
+      <a className="bottom-link" href="#end">
+        Przejdź na sam dół
+      </a>
 
       <div className="installments">
         <InstallmentsTable
@@ -148,6 +171,17 @@ function App() {
           data={data}
         />
       </div>
+
+      <h3
+        style={{
+          marginTop: "50px",
+          textAlign: "center",
+          paddingBottom: "100px",
+        }}
+        id="end"
+      >
+        Koniec
+      </h3>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import { numberWithCommas } from "../helpers/numberWithCommas";
+
 export const InstallmentsTable = ({ headers, installments, data }) => {
   return (
     <table>
@@ -14,7 +16,7 @@ export const InstallmentsTable = ({ headers, installments, data }) => {
       {installments.map((month) => (
         <tr>
           {data[month].map((value) => (
-            <td className="installments__data">{value}</td>
+            <td className="installments__data">{numberWithCommas(value)}</td>
           ))}
         </tr>
       ))}
