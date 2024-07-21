@@ -1,10 +1,18 @@
 import "./App.css";
+import React from "react";
 import { useMemo, useState } from "react";
+import { InstallmentsTable } from "./components/InstallmentsTable.jsx";
+import { calculateFixedInstallmentData } from "./helpers/calculateFixedInstallmentData";
+import { calculateDecreasingInstallmentData } from "./helpers/calculateDecreasingInstallmentData";
+
+type InstallmentType = "fixed" | "decreasing";
 
 function App() {
   const [interest, setInterest] = useState(0.1);
   const [totalInstallments, setTotalInstallments] = useState(120);
   const [totalAmount, setTotalAmount] = useState(500000);
+  const [installmentType, setInstallmentType] =
+    useState<InstallmentType>("fixed");
 
   const monthlyInterest = useMemo(() => interest / 12, [interest]);
 
@@ -22,6 +30,10 @@ function App() {
     [singleInstallmentAmount]
   );
 
+  const roundedCapitalInEachInstallment = useMemo(() => {
+    return Math.ceil((totalAmount / totalInstallments) * 100) / 100;
+  }, []);
+
   const headers = [
     "Numer raty",
     "Początkowa wartość",
@@ -31,37 +43,26 @@ function App() {
     "Wartość końcowa",
   ];
 
-  const installments = [];
+  const installments: number[] = [];
 
-  for (let i = 1; i <= totalInstallments; i++) {
+  for (let i: number = 1; i <= totalInstallments; i++) {
     installments.push(i);
   }
 
-  const data = [[0, totalAmount, 0, 0, 0, totalAmount]];
-
-  for (let i = 1; i <= totalInstallments; i++) {
-    const installmentNumber = i;
-    const startValue = data[i - 1][5];
-    let installment = roundedInstallment;
-    const interest = Math.ceil(data[i - 1][5] * monthlyInterest * 100) / 100;
-    let capital = Math.round((installment - interest) * 100) / 100;
-    let finalValue = Math.round((startValue - capital) * 100) / 100;
-
-    if (i === totalInstallments) {
-      installment += finalValue;
-      capital += finalValue;
-      finalValue = 0;
-    }
-
-    data.push([
-      installmentNumber,
-      startValue,
-      installment,
-      interest,
-      capital,
-      finalValue,
-    ]);
-  }
+  const data =
+    installmentType === "fixed"
+      ? calculateFixedInstallmentData(
+          totalAmount,
+          totalInstallments,
+          roundedInstallment,
+          monthlyInterest
+        )
+      : calculateDecreasingInstallmentData(
+          totalAmount,
+          totalInstallments,
+          roundedCapitalInEachInstallment,
+          monthlyInterest
+        );
 
   return (
     <div className="App">
@@ -71,12 +72,27 @@ function App() {
 
       <div className="inputs">
         <div style={{ marginBottom: "50px" }}>
+          <label htmlFor="totalAmount">Rata stała/malejąca</label>
+          <select
+            id="totalAmount"
+            onChange={(event) => {
+              event.preventDefault();
+              setInstallmentType(event.target.value as InstallmentType);
+            }}
+            value={totalAmount}
+            name="interest"
+          >
+            <option value="fixed">Stała</option>
+            <option value="decreasing">Malejąca</option>
+          </select>
+        </div>
+        <div style={{ marginBottom: "50px" }}>
           <label htmlFor="totalAmount">Kwota kredytu (zł)</label>
           <input
             id="totalAmount"
             onChange={(event) => {
               event.preventDefault();
-              setTotalAmount(event.target.value);
+              setTotalAmount(+event.target.value);
             }}
             value={totalAmount}
             name="interest"
@@ -90,7 +106,7 @@ function App() {
             id="interest"
             onChange={(event) => {
               event.preventDefault();
-              setInterest(event.target.value / 100);
+              setInterest(+event.target.value / 100);
             }}
             value={interest * 100}
             name="interest"
@@ -107,7 +123,7 @@ function App() {
             id="totalInstallments"
             onChange={(event) => {
               event.preventDefault();
-              setTotalInstallments(event.target.value);
+              setTotalInstallments(+event.target.value);
             }}
             value={totalInstallments}
             name="totalInstallments"
@@ -117,28 +133,20 @@ function App() {
         </div>
       </div>
 
-      <h2>Rata kredytu (zaokrąglona): {roundedInstallment} zł</h2>
+      {installmentType === "fixed" && (
+        <h2>Rata kredytu (zaokrąglona): {roundedInstallment} zł</h2>
+      )}
+
+      {installmentType === "decreasing" && (
+        <h2>Część kapiatłu w racie: {roundedInstallment} zł</h2>
+      )}
 
       <div className="installments">
-        <table>
-          <tr>
-            {headers.map((header) => (
-              <th
-                className="installments__header"
-                style={{ border: "1px solid black" }}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-          {installments.map((month) => (
-            <tr>
-              {data[month].map((value) => (
-                <td className="installments__data">{value}</td>
-              ))}
-            </tr>
-          ))}
-        </table>
+        <InstallmentsTable
+          headers={headers}
+          installments={installments}
+          data={data}
+        />
       </div>
     </div>
   );
