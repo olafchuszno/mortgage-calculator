@@ -1,7 +1,12 @@
+:root {
+  scroll-behavior: smooth;
+}
+
 .App {
   text-align: center;
   background-color: #282c34;
   color: white;
+  padding-bottom: 48px;
 }
 
 .inputs {
@@ -9,12 +14,21 @@
   justify-content: space-evenly;
 }
 
+.input-label {
+  padding-right: 8px;
+}
+
+.additional-info {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 50px 0;
+}
+
 .bottom-link {
   color: white;
   font-size: 16px;
   text-decoration: none;
   font-weight: 700;
-  margin-top: 32px;
   border-radius: 20px;
   border: 1px solid white;
   padding: 4px 20px;
@@ -28,8 +42,27 @@
   transform: translateX(10px);
 }
 
+.top-link {
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 20px;
+  border: 1px solid white;
+  padding: 4px 20px;
+  transition: all 0.2s ease-in-out;
+  transform: translateX(0px);
+}
+
+.top-link:hover {
+  border: 4px solid white;
+  transition: all 0.2s ease-in-out;
+  transform: translateX(10px);
+}
+
 .installments {
   margin-top: 48px;
+  margin-bottom: 48px;
   display: flex;
   justify-content: center;
 }
