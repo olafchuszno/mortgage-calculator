@@ -71,7 +71,7 @@ function App() {
 
       <div className="inputs">
         <div style={{ marginBottom: "50px" }}>
-          <label htmlFor="">Kwota kredytu (zł)</label>
+          <label htmlFor="totalAmount">Kwota kredytu (zł)</label>
           <input
             id="totalAmount"
             onChange={(event) => {
@@ -85,7 +85,7 @@ function App() {
           <p>Kwota kredytu (w zł): {totalAmount}</p>
         </div>
         <div style={{ marginBottom: "50px" }}>
-          <label htmlFor="">Oprocentowanie nominalne (w %)</label>
+          <label htmlFor="interest">Oprocentowanie nominalne (w %)</label>
           <input
             id="interest"
             onChange={(event) => {
@@ -102,7 +102,7 @@ function App() {
           </p>
         </div>
         <div style={{ marginBottom: "50px" }}>
-          <label htmlFor="">Ilość rat (łącznie)</label>
+          <label htmlFor="totalInstallments">Ilość rat (łącznie)</label>
           <input
             id="totalInstallments"
             onChange={(event) => {
