@@ -183,6 +183,12 @@ function App() {
     <div className="App">
       <header style={{ marginBottom: "-160px" }} className="App-header">
         <h1>Kalkulator hipoteczny</h1>
+        <p style={{ fontSize: "18px" }}>
+          Zapraszam do bezpłatnej indywidualnej konsultacji{" "}
+          <a className="jola-link" href="mailto:jolanta.bartosinska@gmail.com">
+            jolanta.bartosinska@gmail.com
+          </a>
+        </p>
       </header>
 
       <div id="top" className="inputs">
