@@ -1,5 +1,28 @@
 .App {
   text-align: center;
+  background-color: #282c34;
+  color: white;
+}
+
+.inputs {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.installments {
+  margin-top: 48px;
+  display: flex;
+  justify-content: center;
+}
+
+.installments__header {
+  font-size: 24px;
+  padding: 2px 10px;
+}
+
+.installments__data {
+  font-size: 18px;
+  padding: 2px 10px;
 }
 
 .App-logo {
