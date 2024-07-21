@@ -9,17 +9,19 @@ import { numberWithCommas } from "./helpers/numberWithCommas.js";
 type InstallmentType = "fixed" | "decreasing";
 
 function App() {
-  const [interest, setInterest] = useState(0.1);
-  const [totalInstallments, setTotalInstallments] = useState(120);
+  const [interest, setInterest] = useState(0.09);
+  const [displayedInterest, setDisplayedInterest] = useState(interest);
+
+  const [totalInstallments, setTotalInstallments] = useState(300);
   const [displayedTotalInstallments, setDisplayedTotalInstallments] =
     useState(totalInstallments);
 
-  const [totalAmount, setTotalAmount] = useState(500000);
+  const [totalAmount, setTotalAmount] = useState(300000);
+  const [displayedTotalAmount, setDisplayedTotalAmount] = useState(totalAmount);
+
   const [installmentType, setInstallmentType] =
     useState<InstallmentType>("fixed");
 
-  const [displayedTotalAmount, setDisplayedTotalAmount] = useState(500000);
-  const [displayedInterest, setDisplayedInterest] = useState(500000);
   const [displayAdditionalInfo, setDisplayAdditionalInfo] = useState(false);
 
   // Additional info
@@ -158,6 +160,25 @@ function App() {
     [data]
   );
 
+  const mortgageDuration = Math.ceil(totalInstallments / 12);
+
+  const yearsString =
+    mortgageDuration === 1
+      ? "rok"
+      : mortgageDuration < 5
+      ? "lata"
+      : mortgageDuration % 10 === 0
+      ? "lat"
+      : +mortgageDuration.toString().split("")[
+          mortgageDuration.toString().split("").length - 1
+        ] > 4
+      ? "lat"
+      : +mortgageDuration.toString().split("")[
+          mortgageDuration.toString().split("").length - 1
+        ] === 1
+      ? "lat"
+      : "lata";
+
   return (
     <div className="App">
       <header style={{ marginBottom: "-160px" }} className="App-header">
@@ -227,7 +248,7 @@ function App() {
 
         <div style={{ marginBottom: "50px" }}>
           <label className="input-label" htmlFor="totalInstallments">
-            Ilość rat (łącznie)
+            Ilość miesięcy (łącznie)
           </label>
           <input
             id="totalInstallments"
@@ -241,6 +262,9 @@ function App() {
           />
 
           <p>Łączna ilość rat (w kredycie): {totalInstallments}</p>
+          <p>
+            Długość kredytu: {mortgageDuration} {yearsString}
+          </p>
         </div>
       </div>
 
