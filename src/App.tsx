@@ -11,6 +11,9 @@ type InstallmentType = "fixed" | "decreasing";
 function App() {
   const [interest, setInterest] = useState(0.1);
   const [totalInstallments, setTotalInstallments] = useState(120);
+  const [displayedTotalInstallments, setDisplayedTotalInstallments] =
+    useState(totalInstallments);
+
   const [totalAmount, setTotalAmount] = useState(500000);
   const [installmentType, setInstallmentType] =
     useState<InstallmentType>("fixed");
@@ -42,6 +45,20 @@ function App() {
 
     setDisplayedTotalAmount(+stringAmount.join(""));
   }, [totalAmount]);
+
+  useEffect(() => {
+    // ["1", "5", "5"]
+    const stringTotalInstallments = totalInstallments.toString().split("");
+
+    // && stringAmount[1] !== ","
+    if (stringTotalInstallments.length > 1) {
+      if (stringTotalInstallments[0] === "0") {
+        stringTotalInstallments.splice(0, 1);
+      }
+    }
+
+    setDisplayedTotalInstallments(+stringTotalInstallments.join(""));
+  }, [totalInstallments]);
 
   useEffect(() => {
     // ["1", "5", "5"]
@@ -152,6 +169,7 @@ function App() {
           <label className="input-label" htmlFor="totalAmount">
             Rata stała/malejąca
           </label>
+
           <select
             id="totalAmount"
             onChange={(event) => {
@@ -206,6 +224,7 @@ function App() {
             {Math.round(monthlyInterest * 10000) / 100}
           </p>
         </div>
+
         <div style={{ marginBottom: "50px" }}>
           <label className="input-label" htmlFor="totalInstallments">
             Ilość rat (łącznie)
@@ -216,7 +235,7 @@ function App() {
               event.preventDefault();
               setTotalInstallments(+event.target.value);
             }}
-            value={totalInstallments}
+            value={displayedTotalInstallments}
             name="totalInstallments"
             type="number"
           />
